@@ -1,159 +1,85 @@
-# -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 import telebot
-from telebot import types
-from selenium.webdriver.common.by import By
-from time import sleep
+import datetime
+from utils.telegramcalendar import create_calendar
+from telebot import apihelper
+
+apihelper.proxies = {'https': 'socks5://telegram.vpn99.net:55655'}
+bot = telebot.TeleBot("1173699882:AAGpJD6jHDo7Wtb_Q7waQh3G8rNftkbRVko")
+current_shown_dates={}
 
 
-bot = telebot.TeleBot('1173699882:AAGpJD6jHDo7Wtb_Q7waQh3G8rNftkbRVko')
+@bot.message_handler(commands=['calendar'])
+def handle_calendar_command(message):
 
+    now = datetime.datetime.now()
+    chat_id = message.chat.id
 
-
-@bot.message_handler(commands=['help', 'start'])
-def start(message):
-    markup = types.InlineKeyboardMarkup(row_width=7)
-    item1 = types.InlineKeyboardButton("1", callback_data='1')
-    item2 = types.InlineKeyboardButton("2", callback_data='2')
-    item3 = types.InlineKeyboardButton("3", callback_data='3')
-    item4 = types.InlineKeyboardButton("4", callback_data='4')
-    item5 = types.InlineKeyboardButton("5", callback_data='5')
-    item6 = types.InlineKeyboardButton("6", callback_data='6')
-    item7 = types.InlineKeyboardButton("7", callback_data='7')
-    item8 = types.InlineKeyboardButton("8", callback_data='8')
-    item9 = types.InlineKeyboardButton("9", callback_data='9')
-    item10 = types.InlineKeyboardButton("10", callback_data='10')
-    item11 = types.InlineKeyboardButton("11", callback_data='11')
-    item12 = types.InlineKeyboardButton("12", callback_data='12')
-    item13 = types.InlineKeyboardButton("13", callback_data='13')
-    item14 = types.InlineKeyboardButton("14", callback_data='14')
-    item15 = types.InlineKeyboardButton("15", callback_data='15')
-    item16 = types.InlineKeyboardButton("16", callback_data='16')
-    item17 = types.InlineKeyboardButton("17", callback_data='17')
-    item18 = types.InlineKeyboardButton("18", callback_data='18')
-    item19 = types.InlineKeyboardButton("19", callback_data='19')
-    item20 = types.InlineKeyboardButton("20", callback_data='20')
-    item21 = types.InlineKeyboardButton("21", callback_data='21')
-    item22 = types.InlineKeyboardButton("22", callback_data='22')
-    item23 = types.InlineKeyboardButton("23", callback_data='23')
-    item24 = types.InlineKeyboardButton("24", callback_data='24')
-    item25 = types.InlineKeyboardButton("25", callback_data='25')
-    item26 = types.InlineKeyboardButton("26", callback_data='26')
-    item27 = types.InlineKeyboardButton("27", callback_data='27')
-    item28 = types.InlineKeyboardButton("28", callback_data='28')
-    item29 = types.InlineKeyboardButton("29", callback_data='29')
-    item30 = types.InlineKeyboardButton("30", callback_data='30')
-    item31 = types.InlineKeyboardButton("31", callback_data='31')
-    markup.add(item1, item2,item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15, item16, item17, item18, item19, item20, item21, item22, item23, item24, item25, item26, item27, item28, item29, item30, item31)
-    bot.send_message(message.chat.id, 'Выберите дату:', reply_markup=markup)
-
-@bot.callback_query_handler(func=lambda call: True)
-def callback_inline(call):
-    try:
-        if call.message:
-            if call.data == '1':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 1
-            elif call.data == '2':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 2
-            elif call.data == '3':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 3
-            elif call.data == '4':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 4
-            elif call.data == '5':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 5
-            elif call.data == '6':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 6
-                print(d)
-            elif call.data == '7':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 7
-            elif call.data == '8':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 8
-            elif call.data == '9':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 9
-            elif call.data == '10':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 10
-            elif call.data == '11':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 11
-            elif call.data == '12':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 12
-            elif call.data == '13':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 13
-            elif call.data == '14':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 14
-            elif call.data == '15':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 15
-            elif call.data == '16':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 16
-            elif call.data == '17':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 17
-            elif call.data == '18':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 18
-            elif call.data == '19':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 19
-            elif call.data == '20':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 20
-            elif call.data == '21':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 21
-            elif call.data == '22':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 22
-            elif call.data == '23':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 23
-            elif call.data == '24':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 24
-            elif call.data == '25':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 25
-            elif call.data == '26':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 26
-            elif call.data == '27':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 27
-            elif call.data == '28':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 28
-            elif call.data == '29':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 29
-            elif call.data == '30':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 30
-            elif call.data == '31':
-                bot.send_message(call.message.chat.id ,'Теперь время в формате 24. Например: 14')
-                d = 31
+    date = (now.year, now.month)
+    current_shown_dates[chat_id] = date
     
-    except Exception as e:
-        print(repr(e))
- 
-    
- 
+    markup = create_calendar(now.year, now.month)
 
-bot.polling()
-    
+    bot.send_message(message.chat.id, "Выберите дату:", reply_markup=markup)
 
+
+@bot.callback_query_handler(func=lambda call: 'DAY' in call.data[0:13])
+def handle_day_query(call):
+    chat_id = call.message.chat.id
+    saved_date = current_shown_dates.get(chat_id)
+    last_sep = call.data.rfind(';') + 1
+    m = call.data[4:8]
+    rot2 = call.data[9:11]
+    newstr = call.data.replace(";", " ") 
+    m = newstr.split()[1]
+    rot2 = newstr.split()[2]
+    d = newstr.split()[3]
+    print(m + '/' + rot2 + '/' + d)
+
+
+    if saved_date is not None:
+
+        day = call.data[last_sep:]
+        date = datetime.datetime(int(saved_date[0]), int(saved_date[1]), int(day), 0, 0, 0)
+        bot.send_message(chat_id=chat_id, text='Вы успешно выбрали дату')
+        bot.answer_callback_query(call.id, text="")
+
+    else:
+        # add your reaction for shown an error
+        pass
+
+
+@bot.callback_query_handler(func=lambda call: 'MONTH' in call.data)
+def handle_month_query(call):
+
+    info = call.data.split(';')
+    month_opt = info[0].split('-')[0]
+    year, month = int(info[1]), int(info[2])
+    chat_id = call.message.chat.id
+
+    if month_opt == 'PREV':
+        month -= 1
+
+    elif month_opt == 'NEXT':
+        month += 1
+
+    if month < 1:
+        month = 12
+        year -= 1 
+
+    if month > 12:
+        month = 1
+        year += 1
+
+    date = (year, month)
+    current_shown_dates[chat_id] = date
+    markup = create_calendar(year, month)
+    bot.edit_message_text("Выберите дату: ", call.from_user.id, call.message.message_id, reply_markup=markup)
+
+
+@bot.callback_query_handler(func=lambda call: "IGNORE" in call.data)
+def ignore(call):
+    bot.answer_callback_query(call.id, text="Это не дата!")
+
+
+if __name__ == "__main__":
+    bot.polling()
