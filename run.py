@@ -8,6 +8,10 @@ from utils.telegramcalendar import create_calendar
 from telebot import apihelper
 import datetime
 
+
+
+driver = webdriver.Chrome('chromedriver')
+
 current_shown_dates={}
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -15,6 +19,7 @@ x = ''
 telephone = ''
 tomp = ''
 d = ''
+l = ''
 rot2 = ''
 name = ''
 
@@ -65,11 +70,54 @@ def handle_day_query(call):
 
 
     if saved_date is not None:
+        l_keys = 'stomatologyReservation@gmail.com'
+        p_keys = '10293873745'
 
         day = call.data[last_sep:]
-        date = datetime.datetime(int(saved_date[0]), int(saved_date[1]), int(day), 0, 0, 0)
-        bot.send_message(chat_id=chat_id, text='Теперь напишите Имя')
-        bot.answer_callback_query(call.id, text="")
+        
+        driver.get('https://calendar.google.com/calendar/r/day/' + m+'/'+ rot2 +'/' + str(d) +"?pli=1%252Fday%252F2021%252F5%252F11")
+        sleep(1)
+        login = driver.find_element_by_class_name('whsOnd')
+        login.send_keys(l_keys)
+        cursor = driver.find_element_by_class_name('CwaK9')
+        cursor.click()
+        sleep(6)
+        password = driver.find_element_by_class_name('whsOnd')
+        password.send_keys(p_keys)
+        cursor = driver.find_element_by_class_name('CwaK9')
+        cursor.click()
+        no_time = []
+        sleep(4)
+        
+        all_if = driver.find_elements_by_class_name('gVNoLb')
+        for i in range(0,len(all_if)):
+            no_time.append(all_if[i].text)
+        driver.quit()
+        markup3 = types.InlineKeyboardMarkup(row_width=3)
+        item1 = types.InlineKeyboardButton("11:00", callback_data='11')
+        item2 = types.InlineKeyboardButton("12:00", callback_data='12')
+        item3 = types.InlineKeyboardButton("13:00", callback_data='13')
+        item4 = types.InlineKeyboardButton("14:00", callback_data='14')
+        item5 = types.InlineKeyboardButton("15:00", callback_data='15')
+        item6 = types.InlineKeyboardButton("16:00", callback_data='16')
+        item7 = types.InlineKeyboardButton("17:00", callback_data='17')
+        print(no_time)
+        if '11AM–12PM' not in no_time:
+            markup3.add(item1)
+        if '12–1PM' not in no_time:
+            markup3.add(item2)
+        if '1–2PM' not in no_time:
+            markup3.add(item3)
+        if '2–3PM' not in no_time:
+            markup3.add(item4)
+        if '3–4PM' not in no_time:
+            markup3.add(item5)
+        if '4–5PM' not in no_time:
+            markup3.add(item6)
+        if '5–6PM' not in no_time:
+            markup3.add(item7)
+            
+        bot.send_message(chat_id=chat_id, text="Время",reply_markup=markup3)
 
     else:
         # add your reaction for shown an error
@@ -112,7 +160,7 @@ def ignore(call):
 
 @bot.message_handler(commands=['asfsa'])
 def variant(message):
-    bot.send_message(message.chat.id, 'Мы работаем 5/7 с 9.00 до 19.00 Сб. Вс. - Выходной')
+    bot.send_message(message.chat.id, 'Мы работаем 5/7 с 11.00 до 17.00 Сб. Вс. - Выходной')
     now = datetime.datetime.now()
     chat_id = message.chat.id
 
@@ -127,12 +175,11 @@ def variant(message):
     
 @bot.message_handler(commands=['write'], func=lambda message: True)
 def parser(message):
-    global d,x,name, rot2, m, telephone
+    global d,x,name, rot2, m, telephone, tomp
     bot.send_message(message.chat.id,'Ожидайте, обычно это занимает около минуты')
     l_keys = 'stomatologyReservation@gmail.com'
     p_keys = '10293873745'
 
-    driver = webdriver.Chrome('chromedriver')
     driver.get('https://calendar.google.com/calendar/r?pli=1')
 
     login = driver.find_element_by_class_name('whsOnd')
@@ -170,6 +217,12 @@ def parser(message):
     title.click()
     title.send_keys(name + ' ' + telephone)
     sleep(2)
+    desk = driver.find_element_by_xpath('//*[@id="tabEvent"]/div/div[5]/div[1]/div/div[2]/div/div/span/span')
+    desk.click()
+    sleep(1)
+    disc = driver.find_element_by_xpath('//*[@id="T2Ybvb0"]')
+    disc.send_keys(tomp)
+    sleep(2)
     butt = driver.find_element_by_xpath('//*[@id="yDmH0d"]/div/div/div[2]/span/div/div[1]/div[3]/div[2]/div[3]/span')
     butt.click()
     bot.send_message(message.chat.id, 'Вы успешно забронированы!')
@@ -190,110 +243,75 @@ def text(message):
 def text2(message):
     global telephone
     telephone = message.text
-    global x
-    global d,sous,array
-    markup = types.InlineKeyboardMarkup(row_width=3)
-    item1 = types.InlineKeyboardButton("11:00", callback_data='11')
-    item2 = types.InlineKeyboardButton("12:00", callback_data='12')
-    item3 = types.InlineKeyboardButton("13:00", callback_data='13')
-    item4 = types.InlineKeyboardButton("14:00", callback_data='14')
-    item5 = types.InlineKeyboardButton("15:00", callback_data='15')
-    item6 = types.InlineKeyboardButton("16:00", callback_data='16')
-    item7 = types.InlineKeyboardButton("17:00", callback_data='17')
- 
-    markup.add(item1, item2, item3, item4, item5, item6, item7)    
-    bot.send_message(message.chat.id, "Теперь выберите время",reply_markup=markup)
+    global x, name
+    global d,sous,array,m, rot2, tomp, l
+    print(tomp+ '.'+l)
+    
+    bot.send_message(message.chat.id, 'Все ли вы указали верно?\n'
+    + 'Прием на ' + str(tomp) + '\n' + d + '.' + rot2 + '.' + m +
+    '/' + l + '\n' + name + '\n' + telephone)
+    
+    botik(message)
     
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
-    global x, telephone
+    global x, telephone, l, tomp
     try:
         if call.message:
             if call.data == '11':
-                if int(rot2) > 9:
-                    bot.send_message(call.message.chat.id,'"Запись на прием" \n' +  m + '.' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n'+ '"' + name + ' ' + telephone + '"')
-                if int(rot2) <= 9:
-                    
-                    
-                    
-                    bot.send_message(call.message.chat.id, '"Запись на прием" \n' + m + '.' + '0' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n' + '"' + name + ' ' + telephone + '"')
-                    
+ 
+                
+                l = str(call.data) + ':00'
+                print(l)               
+                bot.send_message(call.message.chat.id, 'Введите Имя и Фамилию')   
                 x = '11:00AM'
                 sleep(2)
-                botik(call.message)
                 
             elif call.data == '12':
-                if int(rot2) > 9:
-                    bot.send_message(call.message.chat.id,'"Запись на прием" \n' +  m + '.' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n'+ '"' + name + ' ' + telephone + '"')
-                if int(rot2) <= 9:
-                    
-                    
-                    
-                    bot.send_message(call.message.chat.id, '"Запись на прием" \n' + m + '.' + '0' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n' + '"' + name + ' ' + telephone + '"')
-                    
+                
+                l = str(call.data) + ':00'
+                print(l) 
+                bot.send_message(call.message.chat.id, 'Введите Имя и Фамилию')   
                 x = '12:00AM'
                 sleep(2)
-                botik(call.message)
             elif call.data == '13':
-                if int(rot2) > 9:
-                    bot.send_message(call.message.chat.id,'"Запись на прием" \n' +  m + '.' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n'+ '"' + name + ' ' + telephone + '"')
-                if int(rot2) <= 9:
-                    
-                    
-                    
-                    bot.send_message(call.message.chat.id, '"Запись на прием" \n' + m + '.' + '0' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n' + '"' + name + ' ' + telephone + '"')
-                    
+                
+                l = str(call.data) + ':00'
+                
+                print(l)
+                bot.send_message(call.message.chat.id, 'Введите Имя и Фамилию')   
                 x = '1:00PM'
                 sleep(2)
-                botik(call.message)
             elif call.data == '14':
-                if int(rot2) > 9:
-                    bot.send_message(call.message.chat.id,'"Запись на прием" \n' +  m + '.' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n'+ '"' + name + ' ' + telephone + '"')
-                if int(rot2) <= 9:
-                    
-                    
-                    
-                    bot.send_message(call.message.chat.id, '"Запись на прием" \n' + m + '.' + '0' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n' + '"' + name + ' ' + telephone + '"')
-                    
+                
+                l = str(call.data) + ':00'
+                print(l)
+                bot.send_message(call.message.chat.id, 'Введите Имя и Фамилию')   
                 x = '2:00PM'
                 sleep(2)
-                botik(call.message)
             elif call.data == '15':
-                if int(rot2) > 9:
-                    bot.send_message(call.message.chat.id,'"Запись на прием" \n' +  m + '.' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n'+ '"' + name + ' ' + telephone + '"')
-                if int(rot2) <= 9:
-                    
-                    
-                    
-                    bot.send_message(call.message.chat.id, '"Запись на прием" \n' + m + '.' + '0' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n' + '"' + name + ' ' + telephone + '"')
-                    
+                
+                l = str(call.data) + ':00'
+                print(l)
+                
+                bot.send_message(call.message.chat.id, 'Введите Имя и Фамилию')   
                 x = '3:00PM'
                 sleep(2)
-                botik(call.message)
             elif call.data == '16':
-                if int(rot2) > 9:
-                    bot.send_message(call.message.chat.id,'"Запись на прием" \n' +  m + '.' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n'+ '"' + name + ' ' + telephone + '"')
-                if int(rot2) <= 9:
-                    
-                    
-                    
-                    bot.send_message(call.message.chat.id, '"Запись на прием" \n' + m + '.' + '0' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n' + '"' + name + ' ' + telephone + '"')
-                    
+                
+                l = str(call.data) + ':00'
+                print(l)
+                bot.send_message(call.message.chat.id, 'Введите Имя и Фамилию')   
                 x = '4:00PM'
                 sleep(2)
-                botik(call.message)
+             
             elif call.data == '17':
-                if int(rot2) > 9:
-                    bot.send_message(call.message.chat.id,'"Запись на прием" \n' +  m + '.' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n'+ '"' + name + ' ' + telephone + '"')
-                if int(rot2) <= 9:
-                    
-                    
-                    
-                    bot.send_message(call.message.chat.id, '"Запись на прием" \n' + m + '.' + '0' + rot2 + '.' + str(d) + ' на' + ' ' + call.data + ':00 \n' + '"' + name + ' ' + telephone + '"')
-                    
+                
+                l = str(call.data) + ':00'
+                print(l)  
+                bot.send_message(call.message.chat.id, 'Введите Имя и Фамилию')   
                 x = '5:00PM'
                 sleep(2)
-                botik(call.message)
             elif call.data == 'g':
                 handle_calendar_command(call.message)
             elif call.data == 's':

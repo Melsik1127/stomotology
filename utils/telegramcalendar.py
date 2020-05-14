@@ -35,11 +35,11 @@ def create_calendar(year=None, month=None):
     data_ignore = create_callback_data("IGNORE", year, month, 0)
     markup = {"inline_keyboard": []}
     # First row - Month and Year
-    row = [{"text": calendar.month_name[month] + " " + str(year), "callback_data": data_ignore}]
+    row = [{"text": calendar.month_name[month] + str(year), "callback_data": data_ignore}]
     markup["inline_keyboard"].append(row)
     # Second row - Week Days
     row = []
-    for day in ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]:
+    for day in ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]:
         row.append({"text": day, "callback_data": data_ignore})
     markup["inline_keyboard"].append(row)
 
